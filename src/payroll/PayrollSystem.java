@@ -44,7 +44,7 @@ public class PayrollSystem {
 
     private void addPaycheck(Date date, Employee employee) {
         double amount = employee.calculatePay(date);
-        Paycheck paycheck = new Paycheck(employee.getId(), date, amount);
+        Paycheck paycheck = new Paycheck(employee.id(), date, amount);
 
         paycheckRepository.add(paycheck);
     }
@@ -58,6 +58,5 @@ public class PayrollSystem {
 
         HourlyPayment hourlyPayment = (HourlyPayment) employee.paymentType();
         hourlyPayment.addTimeCard(timeCard);
-
     }
 }

@@ -18,7 +18,7 @@ public class RuntimeEmployeeStore implements EmployeeRepository {
 
     @Override
     public void add(Employee employee) {
-        store.put(employee.getId(), employee);
+        store.put(employee.id(), employee);
     }
 
     @Override

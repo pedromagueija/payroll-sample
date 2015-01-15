@@ -18,7 +18,7 @@ public class Employee {
         this.paymentSchedule = paymentSchedule;
     }
 
-    public String getId() {
+    public String id() {
         return id;
     }
 

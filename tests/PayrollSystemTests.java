@@ -18,7 +18,6 @@ public class PayrollSystemTests {
 
     private Employee salariedEmployee;
     private PayrollSystem payrollSystem;
-    private String employeeId;
     private Employee hourlyEmployee;
     private TimeCard timeCard;
     private double salary;
@@ -26,60 +25,69 @@ public class PayrollSystemTests {
 
     @Before
     public void setUp() throws Exception {
-        RuntimeEmployeeStore employeeRepository = new RuntimeEmployeeStore();
-        RuntimePaycheckStore paycheckRepository = new RuntimePaycheckStore();
-
-        employeeId = "100";
         salary = 1000.0;
         rate = 10.0;
 
-        salariedEmployee = TestingEmployeeFactory.createSalariedEmployee(employeeId, salary);
+        salariedEmployee = TestingEmployeeFactory.createSalariedEmployee("1", salary);
+        hourlyEmployee = TestingEmployeeFactory.createHourlyEmployee("2", rate);
+        timeCard = new TimeCard(hourlyEmployee.id(), DateFactory.create(2015, 1, 5), 8.0);
+
+        RuntimeEmployeeStore employeeRepository = new RuntimeEmployeeStore();
+        RuntimePaycheckStore paycheckRepository = new RuntimePaycheckStore();
         payrollSystem = new PayrollSystem(employeeRepository, paycheckRepository);
-        hourlyEmployee = TestingEmployeeFactory.createHourlyEmployee(employeeId, rate);
-        timeCard = new TimeCard(employeeId, DateFactory.create(2015, 1, 5), 8.0);
+
+        payrollSystem.addEmployee(salariedEmployee);
+        payrollSystem.addEmployee(hourlyEmployee);
     }
 
     @Test
     public void shouldAddEmployee() {
-        payrollSystem.addEmployee(salariedEmployee);
-        Employee storedEmployee = payrollSystem.findEmployee(employeeId);
+        Employee storedEmployee = payrollSystem.findEmployee(salariedEmployee.id());
 
         assertEquals(salariedEmployee, storedEmployee);
     }
 
     @Test
     public void shouldDeleteEmployee() {
-        payrollSystem.addEmployee(salariedEmployee);
-        payrollSystem.deleteEmployee(employeeId);
+        payrollSystem.deleteEmployee(salariedEmployee.id());
 
-        assertFalse(payrollSystem.employeeExists(employeeId));
+        assertFalse(payrollSystem.employeeExists(salariedEmployee.id()));
     }
 
     @Test
-    public void shouldPayHourlyEmployee() {
+    public void shouldPayHourlyEmployeeOnFriday() {
         Date friday = DateFactory.create(2015, 1, 9);
         double amount = rate * timeCard.hours();
-
-        payrollSystem.addEmployee(hourlyEmployee);
 
         payrollSystem.addTimeCard(timeCard);
 
         payrollSystem.pay(friday);
 
-        Paycheck paycheck = payrollSystem.findPaycheckFor(employeeId, friday);
+        Paycheck paycheck = payrollSystem.findPaycheckFor(hourlyEmployee.id(), friday);
 
         checkIsValidPaycheck(friday, amount, paycheck);
+    }
+
+    @Test
+    public void shouldNotPayHourlyEmployeeOnOtherThanFriday() {
+        Date friday = DateFactory.create(2015, 1, 5);
+
+        payrollSystem.addTimeCard(timeCard);
+
+        payrollSystem.pay(friday);
+
+        Paycheck paycheck = payrollSystem.findPaycheckFor(hourlyEmployee.id(), friday);
+
+        assertEquals("Paycheck should be empty.", paycheck, Paycheck.Empty());
     }
 
     @Test
     public void shouldPaySalariedEmployee() {
         Date lastDayMonth = DateFactory.create(2015, 1, 31);
 
-        payrollSystem.addEmployee(salariedEmployee);
-
         payrollSystem.pay(lastDayMonth);
 
-        Paycheck paycheck = payrollSystem.findPaycheckFor(employeeId, lastDayMonth);
+        Paycheck paycheck = payrollSystem.findPaycheckFor(salariedEmployee.id(), lastDayMonth);
 
         checkIsValidPaycheck(lastDayMonth, salary, paycheck);
     }
@@ -88,11 +96,9 @@ public class PayrollSystemTests {
     public void shouldNotPaySalariedEmployeeIfNotEndOfMonth() {
         Date notEndOfMonth = DateFactory.create(2015, 1, 15);
 
-        payrollSystem.addEmployee(salariedEmployee);
-
         payrollSystem.pay(notEndOfMonth);
 
-        Paycheck paycheck = payrollSystem.findPaycheckFor(employeeId, notEndOfMonth);
+        Paycheck paycheck = payrollSystem.findPaycheckFor(salariedEmployee.id(), notEndOfMonth);
 
         assertEquals("Paycheck should be empty.", paycheck, Paycheck.Empty());
     }
