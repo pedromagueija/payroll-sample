@@ -20,11 +20,6 @@ public class HourlyPayment implements PaymentType {
     }
 
     @Override
-    public boolean isPayDate(Date payDate) {
-        return isFriday(payDate);
-    }
-
-    @Override
     public double calculatePay(Date payDate) {
         double pay = 0;
 
@@ -54,13 +49,6 @@ public class HourlyPayment implements PaymentType {
 
     private double hoursPay(TimeCard timeCard) {
         return timeCard.hours() * rate;
-    }
-
-    private boolean isFriday(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        return cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY;
     }
 
     public void addTimeCard(TimeCard timeCard) {

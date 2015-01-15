@@ -8,7 +8,6 @@ import java.util.Date;
  * @author Pedro
  */
 public interface PaymentType {
-    boolean isPayDate(Date payDate);
 
     double calculatePay(Date payDate);
 }

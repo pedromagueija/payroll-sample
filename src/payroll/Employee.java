@@ -9,11 +9,13 @@ import java.util.Date;
  */
 public class Employee {
     private final PaymentType paymentType;
+    private final PaymentSchedule paymentSchedule;
     private String id;
 
-    public Employee(String employeeId, PaymentType paymentType) {
+    public Employee(String employeeId, PaymentType paymentType, PaymentSchedule paymentSchedule) {
         this.id = employeeId;
         this.paymentType = paymentType;
+        this.paymentSchedule = paymentSchedule;
     }
 
     public String getId() {
@@ -21,7 +23,7 @@ public class Employee {
     }
 
     public boolean isPayDate(Date payDate) {
-        return this.paymentType.isPayDate(payDate);
+        return this.paymentSchedule.isPayDate(payDate);
     }
 
     public double calculatePay(Date payDate) {

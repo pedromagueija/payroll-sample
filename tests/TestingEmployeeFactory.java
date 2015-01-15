@@ -1,4 +1,6 @@
 import payroll.Employee;
+import payroll.MonthlyPaymentSchedule;
+import payroll.WeeklyPaymentSchedule;
 
 /**
  * Creates employees instances for testing purposes.
@@ -11,13 +13,15 @@ class TestingEmployeeFactory {
 
     public static Employee createHourlyEmployee(String employeeId, double rate) {
         return new Employee(employeeId,
-                paymentTypeFactory.createHourlyPayment(rate)
+                paymentTypeFactory.createHourlyPayment(rate),
+                new WeeklyPaymentSchedule()
         );
     }
 
     public static Employee createSalariedEmployee(String employeeId, double salary) {
         return new Employee(employeeId,
-                paymentTypeFactory.createSalariedPayment(salary)
+                paymentTypeFactory.createSalariedPayment(salary),
+                new MonthlyPaymentSchedule()
         );
     }
 

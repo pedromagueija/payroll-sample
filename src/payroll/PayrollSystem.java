@@ -13,8 +13,7 @@ public class PayrollSystem {
     private PaycheckRepository paycheckRepository;
 
 
-    public PayrollSystem(EmployeeRepository employeeRepository,
-                         PaycheckRepository paycheckRepository) {
+    public PayrollSystem(EmployeeRepository employeeRepository, PaycheckRepository paycheckRepository) {
         this.employeeRepository = employeeRepository;
         this.paycheckRepository = paycheckRepository;
     }

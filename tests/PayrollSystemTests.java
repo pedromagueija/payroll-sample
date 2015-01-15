@@ -5,9 +5,7 @@ import payroll.Paycheck;
 import payroll.PayrollSystem;
 import payroll.TimeCard;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
 
@@ -38,7 +36,7 @@ public class PayrollSystemTests {
         salariedEmployee = TestingEmployeeFactory.createSalariedEmployee(employeeId, salary);
         payrollSystem = new PayrollSystem(employeeRepository, paycheckRepository);
         hourlyEmployee = TestingEmployeeFactory.createHourlyEmployee(employeeId, rate);
-        timeCard = new TimeCard(employeeId, onDate(2015, 1, 5), 8.0);
+        timeCard = new TimeCard(employeeId, DateFactory.create(2015, 1, 5), 8.0);
     }
 
     @Test
@@ -59,7 +57,7 @@ public class PayrollSystemTests {
 
     @Test
     public void shouldPayHourlyEmployee() {
-        Date friday = onDate(2015, 1, 9);
+        Date friday = DateFactory.create(2015, 1, 9);
         double amount = rate * timeCard.hours();
 
         payrollSystem.addEmployee(hourlyEmployee);
@@ -75,7 +73,7 @@ public class PayrollSystemTests {
 
     @Test
     public void shouldPaySalariedEmployee() {
-        Date lastDayMonth = onDate(2015, 1, 31);
+        Date lastDayMonth = DateFactory.create(2015, 1, 31);
 
         payrollSystem.addEmployee(salariedEmployee);
 
@@ -86,14 +84,22 @@ public class PayrollSystemTests {
         checkIsValidPaycheck(lastDayMonth, salary, paycheck);
     }
 
+    @Test
+    public void shouldNotPaySalariedEmployeeIfNotEndOfMonth() {
+        Date notEndOfMonth = DateFactory.create(2015, 1, 15);
+
+        payrollSystem.addEmployee(salariedEmployee);
+
+        payrollSystem.pay(notEndOfMonth);
+
+        Paycheck paycheck = payrollSystem.findPaycheckFor(employeeId, notEndOfMonth);
+
+        assertEquals("Paycheck should be empty.", paycheck, Paycheck.Empty());
+    }
+
     private void checkIsValidPaycheck(Date payDate, double amount, Paycheck paycheck) {
         assertNotEquals("Paycheck is empty.", paycheck, Paycheck.Empty());
         assertEquals("Paycheck date is wrong.", payDate, paycheck.date());
         assertEquals("Pay amount is wrong.", amount, paycheck.amount(), 0.001);
-    }
-
-    private Date onDate(int y, int m, int d) {
-        Calendar calendar = new GregorianCalendar(y, m - 1, d);
-        return calendar.getTime();
     }
 }

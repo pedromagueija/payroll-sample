@@ -3,9 +3,7 @@ import org.junit.Test;
 import payroll.HourlyPayment;
 import payroll.TimeCard;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,15 +18,15 @@ public class HourlyPaymentTests {
 
     @Before
     public void setUp() throws Exception {
-        payDate = onDate(2015, 1, 9);
+        payDate = DateFactory.create(2015, 1, 9);
         employeeId = "1";
         hourlyPayment = new HourlyPayment(10.0);
     }
 
     @Test
     public void shouldCalculatePayRegularHours() {
-        TimeCard mondayTimeCard = new TimeCard(employeeId, onDate(2015, 1, 5), 8.0);
-        TimeCard tuesdayTimeCard = new TimeCard(employeeId, onDate(2015, 1, 6), 8.0);
+        TimeCard mondayTimeCard = new TimeCard(employeeId, DateFactory.create(2015, 1, 5), 8.0);
+        TimeCard tuesdayTimeCard = new TimeCard(employeeId, DateFactory.create(2015, 1, 6), 8.0);
 
         hourlyPayment.addTimeCard(mondayTimeCard);
         hourlyPayment.addTimeCard(tuesdayTimeCard);
@@ -39,8 +37,8 @@ public class HourlyPaymentTests {
 
     @Test
     public void shouldCalculatePayOvertime() {
-        TimeCard mondayTimeCard = new TimeCard(employeeId, onDate(2015, 1, 5), 10.0);
-        TimeCard tuesdayTimeCard = new TimeCard(employeeId, onDate(2015, 1, 6), 10.0);
+        TimeCard mondayTimeCard = new TimeCard(employeeId, DateFactory.create(2015, 1, 5), 10.0);
+        TimeCard tuesdayTimeCard = new TimeCard(employeeId, DateFactory.create(2015, 1, 6), 10.0);
 
         hourlyPayment.addTimeCard(mondayTimeCard);
         hourlyPayment.addTimeCard(tuesdayTimeCard);
@@ -51,9 +49,9 @@ public class HourlyPaymentTests {
     }
 
     @Test
-    public void shouldCalculatePayOfTheWeek() {
-        TimeCard mondayTimeCard = new TimeCard(employeeId, onDate(2015, 1, 5), 8.0);
-        TimeCard nextWeekMondayTimeCard = new TimeCard(employeeId, onDate(2015, 1, 12), 8.0);
+    public void shouldIncludeOnlyTimeCardsOfTheWeek() {
+        TimeCard mondayTimeCard = new TimeCard(employeeId, DateFactory.create(2015, 1, 5), 8.0);
+        TimeCard nextWeekMondayTimeCard = new TimeCard(employeeId, DateFactory.create(2015, 1, 12), 8.0);
 
         hourlyPayment.addTimeCard(mondayTimeCard);
         hourlyPayment.addTimeCard(nextWeekMondayTimeCard);
@@ -61,10 +59,5 @@ public class HourlyPaymentTests {
         double amount = hourlyPayment.calculatePay(payDate);
 
         assertEquals(80.0, amount, 0.001);
-    }
-
-    private Date onDate(int y, int m, int d) {
-        Calendar calendar = new GregorianCalendar(y, m - 1, d);
-        return calendar.getTime();
     }
 }
