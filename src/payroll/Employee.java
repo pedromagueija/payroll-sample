@@ -8,12 +8,12 @@ import java.util.Date;
  * @author Pedro
  */
 public class Employee {
-    private final PaymentType payment;
+    private final PaymentType paymentType;
     private String id;
 
     public Employee(String employeeId, PaymentType paymentType) {
         this.id = employeeId;
-        this.payment = paymentType;
+        this.paymentType = paymentType;
     }
 
     public String getId() {
@@ -21,10 +21,14 @@ public class Employee {
     }
 
     public boolean isPayDate(Date payDate) {
-        return this.payment.isPayDate(payDate);
+        return this.paymentType.isPayDate(payDate);
     }
 
     public double calculatePay(Date payDate) {
-        return this.payment.calculatePay(payDate);
+        return this.paymentType.calculatePay(payDate);
+    }
+
+    public PaymentType paymentType() {
+        return paymentType;
     }
 }

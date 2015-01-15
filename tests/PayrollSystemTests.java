@@ -28,7 +28,6 @@ public class PayrollSystemTests {
 
     @Before
     public void setUp() throws Exception {
-        RuntimeTimeCardStore timeCardRepository = new RuntimeTimeCardStore();
         RuntimeEmployeeStore employeeRepository = new RuntimeEmployeeStore();
         RuntimePaycheckStore paycheckRepository = new RuntimePaycheckStore();
 
@@ -37,8 +36,8 @@ public class PayrollSystemTests {
         rate = 10.0;
 
         salariedEmployee = TestingEmployeeFactory.createSalariedEmployee(employeeId, salary);
-        payrollSystem = new PayrollSystem(employeeRepository, timeCardRepository, paycheckRepository);
-        hourlyEmployee = TestingEmployeeFactory.createHourlyEmployee(employeeId, rate, timeCardRepository);
+        payrollSystem = new PayrollSystem(employeeRepository, paycheckRepository);
+        hourlyEmployee = TestingEmployeeFactory.createHourlyEmployee(employeeId, rate);
         timeCard = new TimeCard(employeeId, onDate(2015, 1, 5), 8.0);
     }
 

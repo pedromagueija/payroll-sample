@@ -11,7 +11,7 @@ import java.util.List;
  * @author Pedro
  */
 public class RuntimePaycheckStore implements PaycheckRepository {
-    List<Paycheck> store = new ArrayList<Paycheck>(10);
+    private List<Paycheck> store = new ArrayList<Paycheck>(10);
 
     @Override
     public Paycheck find(String employeeId, Date date) {

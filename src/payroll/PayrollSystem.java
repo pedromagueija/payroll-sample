@@ -10,15 +10,12 @@ import java.util.Date;
 public class PayrollSystem {
 
     private EmployeeRepository employeeRepository;
-    private TimeCardRepository timeCardRepository;
     private PaycheckRepository paycheckRepository;
 
 
     public PayrollSystem(EmployeeRepository employeeRepository,
-                         TimeCardRepository timeCardRepository,
                          PaycheckRepository paycheckRepository) {
         this.employeeRepository = employeeRepository;
-        this.timeCardRepository = timeCardRepository;
         this.paycheckRepository = paycheckRepository;
     }
 
@@ -58,6 +55,10 @@ public class PayrollSystem {
     }
 
     public void addTimeCard(TimeCard timeCard) {
-        timeCardRepository.add(timeCard);
+        Employee employee = employeeRepository.find(timeCard.employeeId());
+
+        HourlyPayment hourlyPayment = (HourlyPayment) employee.paymentType();
+        hourlyPayment.addTimeCard(timeCard);
+
     }
 }

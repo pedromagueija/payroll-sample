@@ -1,13 +1,12 @@
 import payroll.HourlyPayment;
 import payroll.SalariedPayment;
-import payroll.TimeCardRepository;
 
 /**
  * @author Pedro
  */
-public class TestingPaymentTypeFactory {
-    public HourlyPayment createHourlyPayment(String employeeId, double rate, TimeCardRepository timeCardRepository) {
-        return new HourlyPayment(employeeId, rate, timeCardRepository);
+class TestingPaymentTypeFactory {
+    public HourlyPayment createHourlyPayment(double rate) {
+        return new HourlyPayment(rate);
     }
 
     public SalariedPayment createSalariedPayment(double salary) {

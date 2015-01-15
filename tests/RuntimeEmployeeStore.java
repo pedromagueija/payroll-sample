@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Pedro
  */
 public class RuntimeEmployeeStore implements EmployeeRepository {
-    Map<String, Employee> store;
+    private Map<String, Employee> store;
 
     public RuntimeEmployeeStore() {
         this.store = new HashMap<String, Employee>(10);

@@ -1,18 +1,17 @@
 import payroll.Employee;
-import payroll.TimeCardRepository;
 
 /**
  * Creates employees instances for testing purposes.
  *
  * @author Pedro
  */
-public class TestingEmployeeFactory {
+class TestingEmployeeFactory {
 
     private static TestingPaymentTypeFactory paymentTypeFactory = new TestingPaymentTypeFactory();
 
-    public static Employee createHourlyEmployee(String employeeId, double rate, TimeCardRepository timeCardRepository) {
+    public static Employee createHourlyEmployee(String employeeId, double rate) {
         return new Employee(employeeId,
-                paymentTypeFactory.createHourlyPayment(employeeId, rate, timeCardRepository)
+                paymentTypeFactory.createHourlyPayment(rate)
         );
     }
 
